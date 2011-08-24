@@ -1,11 +1,12 @@
-user <%= real_nginx_user %>;
-worker_processes  <%= real_nginx_worker_processes  %>;
+user <%= scope.lookupvar('nginx::params::user') %>;
+worker_processes  <%= scope.lookupvar('nginx::params::worker_processes') %>;
+worker_rlimit_nofile <%= scope.lookupvar('nginx::params::worker_rlimit_nofile') %>;
 
 error_log  /var/log/nginx/error.log;
 pid        /var/run/nginx.pid;
 
 events {
-    worker_connections  <%= real_nginx_worker_connections  %>;
+    worker_connections  <%= scope.lookupvar('nginx::params::worker_connections') %>;
     # multi_accept on;
 }
 
