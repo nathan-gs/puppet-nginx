@@ -2,7 +2,10 @@
 #
 #
 class nginx::install {
-  package { 'nginx':
-    ensure => installed,
+  include apt::ppa::nginx
+
+  package { 'nginx-full':
+    ensure  => latest,
+    require => Class['apt::ppa::nginx'],
   }
 }

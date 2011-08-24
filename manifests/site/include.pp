@@ -8,7 +8,7 @@
 #
 define nginx::site::include ($ensure  = 'present',
                              $content = '' ) {
-	file { "${nginx_includes}/${name}.inc":
+	file { "${nginx::params::includedir}/${name}.inc":
     ensure  => $ensure,
 		content => $content,
 		owner   => 'root',

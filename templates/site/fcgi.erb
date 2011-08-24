@@ -2,34 +2,59 @@ server {
   listen   <%= listen %> ;
 	server_name  <% real_server_name.each do |s_n| -%><%= s_n %> <% end -%>;
   access_log  <%= real_access_log %>;
-	root <%= root %>;
 
 <% if listen == '443' %>
-  ssl  on;
-  ssl_certificate  <%= real_ssl_certificate %>;
-  ssl_certificate_key  <%= real_ssl_certificate_key %>;
+  ssl on;
+  ssl_certificate <%= real_ssl_certificate %>;
+  ssl_certificate_key <%= real_ssl_certificate_key %>;
 
-  ssl_session_timeout  <%= ssl_session_timeout %>;
+  ssl_session_timeout <%= ssl_session_timeout %>;
 
-  ssl_protocols  SSLv2 SSLv3 TLSv1;
-  ssl_ciphers  ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
-  ssl_prefer_server_ciphers   on;
+  ssl_protocols SSLv2 SSLv3 TLSv1;
+  ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
+  ssl_prefer_server_ciphers on;
 <% end -%>
   location / {
+    root <%= root %>;
+    index index.php;
+  }
+
+  ## Images and static content is treated different
+  location ~* ^.+.(jpg|jpeg|gif|css|png|js|ico|xml)$ {
+    access_log        off;
+    expires           30d;
+    root <%= root %>;
   }
 
 	location ~ \.php$ {
-		fastcgi_pass <%= fastcgi_pass %>;
+	  fastcgi_split_path_info ^(.+\.php)(.*)$;
+		fastcgi_pass backend;
 		fastcgi_index index.php;
 		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		include /etc/nginx/includes/fastcgi_params.inc;
+		include <%= scope.lookupvar('nginx::params::includedir') %>/fastcgi_params.inc;
+		fastcgi_intercept_errors on;
+    fastcgi_ignore_client_abort off;
+    fastcgi_connect_timeout 60;
+    fastcgi_send_timeout 180;
+    fastcgi_read_timeout 180;
+    fastcgi_buffer_size 128k;
+    fastcgi_buffers 4 256k;
+    fastcgi_busy_buffers_size 256k;
+    fastcgi_temp_file_write_size 256k;
 	}
 
+  ## Disable viewing .htaccess & .htpassword
 	location ~ /\.ht {
     deny all;
   }
 
 <% if include != '' -%>
-  <%include.each do |inc| -%>include <%= inc %>;<% end -%>
+<% include.each do |inc| -%>
+  include <%= inc %>;
 <% end -%>
+<% end -%>
+}
+
+upstream backend {
+  server <%= fastcgi_pass %>;
 }
