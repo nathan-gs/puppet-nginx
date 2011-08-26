@@ -2,8 +2,9 @@ server {
   listen   <%= listen %> ;
 	server_name  <% real_server_name.each do |s_n| -%><%= s_n %> <% end -%>;
   access_log  <%= real_access_log %>;
+  error_log <%= real_error_log %> <%= error_log_level %>;
   root <%= root %>;
-  index index.php;
+  index <%= index %>;
 
 <% if listen == '443' %>
   ssl on;
@@ -25,12 +26,18 @@ server {
   }
 
 	location ~ \.php$ {
-	  fastcgi_index index.php;
+	  fastcgi_index <%= index %>;
+	  
+	  
+	  
     if (-f $request_filename) {
-      fastcgi_pass 127.0.0.1:9000;
+      fastcgi_pass <%= fastcgi_pass %>;
     }
 		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 		include /etc/nginx/includes/fastcgi_params.inc;
+		<% fastcgi_params.each_pair do |param, value| %>
+		   fastcgi_param <%= param %> <%= value %>;
+        <% end -%>
 	}
 
   ## Disable viewing .htaccess & .htpassword

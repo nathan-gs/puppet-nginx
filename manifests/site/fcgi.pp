@@ -10,6 +10,9 @@
 #	* server_name : server_name directive (could be an array)
 #	* listen : address/port the server listen to. Defaults to 80. Auto enable ssl if 443
 #	* access_log : custom acces logs. Defaults to /var/log/nginx/$name_access.log
+#	* error_log : custom error logs. Defaults to /var/log/nginx/$name_error.log
+#	* error_log_level : custom error log, defaults to info.
+#	* fastcgi_params : the extra fastcgi_params you want to pass, can be a hash.
 #	* include : custom include for the site (could be an array). Include files must exists 
 #	   to avoid nginx reload errors. Use with nginx::site_include  
 #	* ssl_certificate : ssl_certificate path. If empty auto-generating ssl cert
@@ -32,6 +35,15 @@
 #     fastcgi_pass => '127.0.0.1:9000',
 #     server_name  => $fqdn,
 #   }
+#
+#   nginx::site::fcgi {"ssl-withfastcgi-params":
+#     listen       		=> '443',
+#     root         		=> '/var/www/nginx-default',
+#     fastcgi_pass 		=> '/var/run/php5-fpm.sock',
+#     server_name  		=> $fqdn,
+#     fastcgi_params	=> { REDIRECT_STATUS => 200, PLATFORM => 'test' },
+#   }
+#
 define nginx::site::fcgi ($root,
                           $fastcgi_pass,
                           $ensure              = 'present',
@@ -40,6 +52,9 @@ define nginx::site::fcgi ($root,
                           $listen              = '80',
                           $server_name         = '',
                           $access_log          = '',
+						  $error_log		   = '',
+						  $error_log_level	   = 'info',
+						  $fastcgi_params	   = '',
                           $ssl_certificate     = '',
                           $ssl_certificate_key = '',
                           $ssl_session_timeout = '5m') {
@@ -53,6 +68,11 @@ define nginx::site::fcgi ($root,
 	$real_access_log = $access_log ? { 
 		''      => "/var/log/nginx/${name}_access.log",
     default => $access_log,
+  }
+  
+    $real_error_log = $error_log ? { 
+		''      => "/var/log/nginx/${name}_error.log",
+    default => $error_log,
   }
 
 	#Autogenerating ssl certs
