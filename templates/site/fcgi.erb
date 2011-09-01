@@ -19,11 +19,22 @@ server {
 <% end -%>
 
   ## Images and static content is treated different
-  location ~* ^.+.(jpg|jpeg|gif|css|png|js|ico|xml)$ {
+  location ~* ^.+.(htc|jpg|jpeg|gif|css|png|js|ico|xml)$ {
     access_log        off;
     expires           30d;
     root <%= root %>;
   }
+
+<% if rewrite == true %>
+		if (-f $request_filename) {
+                expires max;
+                break;
+        }
+
+        if ($request_filename !~ "\.(htc|jpg|jpeg|gif|css|png|js|ico)$") {
+                rewrite ^(.*) /<%= index %> last;
+        }
+<% end -%>
 
 	location ~ \.php$ {
 	  fastcgi_index <%= index %>;

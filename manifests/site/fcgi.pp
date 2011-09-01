@@ -57,7 +57,8 @@ define nginx::site::fcgi ($root,
 						  $fastcgi_params	   = '',
                           $ssl_certificate     = '',
                           $ssl_certificate_key = '',
-                          $ssl_session_timeout = '5m') {
+                          $ssl_session_timeout = '5m',
+						  $rewrite			   = false) {
   include nginx::fcgi
 
   $real_server_name = $server_name ? { 
