@@ -18,52 +18,46 @@ server {
   ssl_prefer_server_ciphers on;
 <% end -%>
 
-  ## Images and static content is treated different
-  location ~* ^.+.(htc|jpg|jpeg|gif|css|png|js|ico|xml)$ {
-    access_log        off;
-    expires           30d;
-    root <%= root %>;
-  }
+	## Images and static content is treated different
+	location ~* ^.+.(htc|jpg|jpeg|gif|css|png|js|ico|xml)$ {
+		access_log        off;
+		expires           30d;
+	root <%= root %>;
+	}
 
 
 
-location / {
-	index <%= index %>;
-	
-	
-	<% if rewrite == true %>
-			if (-f $request_filename) {
-					expires max;
-					break;
-			}
+	location / {
+		index <%= index %>;
+			
+		<% if rewrite == true %>
+				if (-f $request_filename) {
+						expires max;
+						break;
+				}
 
-			if ($request_filename !~ "\.(htc|jpg|jpeg|gif|css|png|js|ico)$") {
-					rewrite ^(.*) /<%= index %> last;
-			}
-	<% end -%>
-	
-}
+				if ($request_filename !~ "\.(htc|jpg|jpeg|gif|css|png|js|ico)$") {
+						rewrite ^(.*) /<%= index %> last;
+				}
+		<% end -%>
+	}
 
 	location ~ "^(.+\.php)($|/)" {
 		fastcgi_index <%= index %>;
 
-		set  $script     $uri;
-		set  $path_info  "";
+		set $script $uri;
+		set $path_info "";
 
 		if ($uri ~ "^(.+\.php)($|/)") {
-				set $script $1;
+			set $script $1;
 		}
 
 		if ($uri ~ "^(.+\.php)(/.+)") {
-				set $script $1;
-				set $path_info $2;
+			set $script $1;
+			set $path_info $2;
 		}
-		
 	  
-	  
-		if (-f $request_filename) {
-		  fastcgi_pass <%= fastcgi_pass %>;
-		}
+		fastcgi_pass <%= fastcgi_pass %>;
 
 		include /etc/nginx/includes/fastcgi_params.inc;
 		fastcgi_param SCRIPT_FILENAME $document_root$script;
