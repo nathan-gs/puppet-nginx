@@ -25,16 +25,24 @@ server {
     root <%= root %>;
   }
 
-<% if rewrite == true %>
-		if (-f $request_filename) {
-                expires max;
-                break;
-        }
 
-        if ($request_filename !~ "\.(htc|jpg|jpeg|gif|css|png|js|ico)$") {
-                rewrite ^(.*) /<%= index %> last;
-        }
-<% end -%>
+
+location / {
+	index <%= index %>;
+	
+	
+	<% if rewrite == true %>
+			if (-f $request_filename) {
+					expires max;
+					break;
+			}
+
+			if ($request_filename !~ "\.(htc|jpg|jpeg|gif|css|png|js|ico)$") {
+					rewrite ^(.*) /<%= index %> last;
+			}
+	<% end -%>
+	
+}
 
 	location ~ \.php$ {
 	  fastcgi_index <%= index %>;
