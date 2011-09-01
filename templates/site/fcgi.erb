@@ -44,19 +44,37 @@ location / {
 	
 }
 
-	location ~ \.php$ {
-	  fastcgi_index <%= index %>;
+	location ~ "^(.+\.php)($|/)" {
+		fastcgi_index <%= index %>;
+
+		set  $script     $uri;
+		set  $path_info  "";
+
+		if ($uri ~ "^(.+\.php)($|/)") {
+				set $script $1;
+		}
+
+		if ($uri ~ "^(.+\.php)(/.+)") {
+				set $script $1;
+				set $path_info $2;
+		}
+		
 	  
 	  
-	  
-    if (-f $request_filename) {
-      fastcgi_pass <%= fastcgi_pass %>;
-    }
-		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		if (-f $request_filename) {
+		  fastcgi_pass <%= fastcgi_pass %>;
+		}
+
 		include /etc/nginx/includes/fastcgi_params.inc;
+		fastcgi_param SCRIPT_FILENAME $document_root$script;
+		fastcgi_param  PATH_INFO        $path_info;
+		fastcgi_param SCRIPT_NAME $script;
 		<% fastcgi_params.each_pair do |param, value| -%>
-		   fastcgi_param <%= param %> <%= value %>;
+			fastcgi_param <%= param %> <%= value %>;
         <% end -%>
+		<% if listen == '443' %>
+			fastcgi_param HTTPS on;
+		<% end -%>
 	}
 
   ## Disable viewing .htaccess & .htpassword
