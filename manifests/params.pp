@@ -44,6 +44,11 @@ class nginx::params {
 	  ''      => 'www-data',
 	  default => $nginx_user,
 	}
+
+	$group = $nginx_group ? {
+	  ''      => 'www-data',
+	  default => $nginx_group,
+	}
 	
 	$worker_processes = $nginx_worker_processes ? {
 	  ''      => '1',
