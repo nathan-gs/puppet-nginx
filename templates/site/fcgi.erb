@@ -42,6 +42,10 @@ server {
 		<% end -%>
 	}
 
+	location ~* /.*/$ {
+        index <%= index %>;
+    }
+
 	location ~ "^(.+\.php)($|/)" {
 		fastcgi_index <%= index %>;
 
