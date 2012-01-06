@@ -21,9 +21,6 @@ fastcgi_param  SERVER_NAME        $server_name;
 # PHP only, required if PHP was built with --enable-force-cgi-redirect
 fastcgi_param  REDIRECT_STATUS    200;
 
-#fastcgi_connect_timeout 60;
-#fastcgi_send_timeout 180;
-#fastcgi_read_timeout 180;
 fastcgi_buffer_size 128k;
 fastcgi_buffers 4 256k;
 fastcgi_busy_buffers_size 256k;
@@ -34,9 +31,3 @@ fastcgi_intercept_errors on;
 fastcgi_connect_timeout 75;
 fastcgi_send_timeout 600;
 fastcgi_read_timeout 600;
-client_header_timeout 600;
-client_body_timeout 600;
-send_timeout 600;
-
-client_max_body_size 64M;
-client_body_buffer_size 128k;

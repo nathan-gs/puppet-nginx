@@ -58,6 +58,8 @@ server {
     	deny all;
   	}
 
+  	include /etc/nginx/includes/limits.inc;
+
 <% if include != '' -%>
 <% include.each do |inc| -%>
   include <%= inc %>;
