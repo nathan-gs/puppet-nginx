@@ -45,7 +45,7 @@ server {
 		fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
 		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
-		<% if factgi_params != '' -%>
+		<% if fastcgi_params != '' -%>
 		<% fastcgi_params.each_pair do |param, value| -%>
 		fastcgi_param <%= param %> <%= value %>;
         <% end -%>
