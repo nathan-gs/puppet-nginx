@@ -1,0 +1,27 @@
+server {
+    listen   <%= listen %> ;
+    server_name  <% real_server_name.each do |s_n| -%><%= s_n %> <% end -%>;
+    access_log  <%= real_access_log %>;
+
+    <% if listen == '443' %>
+        ssl  on;
+        ssl_certificate  <%= real_ssl_certificate %>;
+        ssl_certificate_key  <%= real_ssl_certificate_key %>;
+
+        ssl_session_timeout  <%= ssl_session_timeout %>;
+
+        ssl_protocols  SSLv2 SSLv3 TLSv1;
+        ssl_ciphers  ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
+        ssl_prefer_server_ciphers   on;
+    <% end -%>
+    location / {
+        proxy_pass      <%= proxy_pass %>;
+        proxy_redirect  off;
+        proxy_set_header        Host            $host;
+        proxy_set_header        X-Real-IP       $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+
+}
+
