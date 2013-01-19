@@ -1,6 +1,7 @@
 # Define: nginx::site::proxy
 #
 define nginx::site::redirect (
+                          $redirect_to,
                           $ensure              = 'present',
                           $listen              = '80',
                           $server_name         = '',
