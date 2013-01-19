@@ -15,7 +15,7 @@ server {
         ssl_prefer_server_ciphers   on;
     <% end -%>
 
-    rewrite      ^ <%= redirect_to %>$1 permanent;
+    rewrite ^(.*) <%= redirect_to %>$1 permanent;
 
 
 
