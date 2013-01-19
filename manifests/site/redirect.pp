@@ -35,6 +35,6 @@ define nginx::site::redirect (
 
 	nginx::site { $name:
 		ensure	=> $ensure,
-		content	=> template('nginx/site/proxy.erb'),
+		content	=> template('nginx/site/redirect.erb'),
 	}
 }
