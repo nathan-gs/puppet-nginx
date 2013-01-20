@@ -16,7 +16,7 @@ server {
     <% end -%>
 
     if ($host ~ ^www) {
-        rewrite ^(.*) $scheme://$host$1 permanent;
+        rewrite ^(.*) $scheme://$server_name$1 permanent;
     }
 
     location / {
