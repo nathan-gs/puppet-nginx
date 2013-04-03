@@ -61,13 +61,13 @@ server {
   	}
 
     location / {
-            <%= if auth_basic != '' %>
+            <% if auth_basic != '' %>
                 auth_basic <%= auth_basic %>;
-            <%= end %>
+            <% end %>
 
-            <%= if auth_basic_user_file != '' %>
+            <% if auth_basic_user_file != '' %>
                auth_basic_user_file <%= auth_basic_user_file %>;
-            <%= end %>
+            <% end %>
     }
 
   	include /etc/nginx/includes/limits.inc;
