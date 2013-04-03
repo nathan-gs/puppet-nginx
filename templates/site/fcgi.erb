@@ -60,16 +60,6 @@ server {
     	deny all;
   	}
 
-    location / {
-            <% if auth_basic != '' %>
-                auth_basic <%= auth_basic %>;
-            <% end %>
-
-            <% if auth_basic_user_file != '' %>
-               auth_basic_user_file <%= auth_basic_user_file %>;
-            <% end %>
-    }
-
   	include /etc/nginx/includes/limits.inc;
 
 <% if include != '' -%>
