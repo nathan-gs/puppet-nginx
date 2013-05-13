@@ -6,7 +6,7 @@ class nginx::install {
 	require nginx::params
 
   package { 'nginx':
-    ensure  => latest,
+    ensure  => installed,
   }
   
   file { "/var/www" :
