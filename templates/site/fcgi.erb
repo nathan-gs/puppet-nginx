@@ -29,7 +29,7 @@ server {
 
 	try_files $uri $uri/ @rewrite;
 
-	location @rewrite {
+    location / {
         rewrite ^/(.*)$ /<%= index %>/$1;
     }
 
