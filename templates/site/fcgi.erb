@@ -27,10 +27,8 @@ server {
 
 	# http://www.zalas.eu/nginx-configuration-for-symfony-projects
 
-	try_files $uri $uri/ @rewrite;
-
-    location / {
-        rewrite ^/(.*)$ /<%= index %>/$1;
+    if (!-e $request_filename) {
+        rewrite ^.*$ /<%= index %> last;
     }
 
 	location ~ \.php {
