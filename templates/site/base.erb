@@ -15,7 +15,16 @@ server {
         ssl_ciphers  ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
         ssl_prefer_server_ciphers   on;
 <% end -%>
+
+    
         location / {
+            <%= if scope.lookupvar('nginx::params::auth_basic') %>
+            auth_basic <%= scope.lookupvar('nginx::params::auth_basic') %>;
+            <%= end %>
+
+            <%= if scope.lookupvar('nginx::params::auth_basic_user_file') %>
+            auth_basic_user_file <%= scope.lookupvar('nginx::params::auth_basic_user_file') %>;
+            <%= end %>
         }
 
 <% if include  != '' %> <%include.each do |inc| %>include <%= inc %>;
